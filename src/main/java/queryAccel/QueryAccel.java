@@ -20,12 +20,12 @@ public static void main( String[] args )
 	
 	BlobClient blobClient = new BlobClientBuilder()
 		    .endpoint("https://queryaccel.blob.core.windows.net")
-		    .sasToken("?sv=2019-10-10&ss=bfqt&srt=sco&sp=rwdlacupx&se=2020-07-31T08:00:13Z&st=2020-05-08T00:00:13Z&spr=https&sig=eOJXfM0yX9q84jKKPg5rMmqzEelEbFjRVYIcriP72W0%3D")
+		    .sasToken("<sastoken>")//Enter your SAS token here
 		    .containerName("airbnb")
 		    .blobName("amsterdam/listings.csv")
 		    .buildClient();
 	try {    
-		//System.out.println("Going to Call QueryHemingway with the blobClientObj="+blobClient.getBlobName());
+		
 		QueryBlobData(blobClient);
 	}
 	
@@ -43,8 +43,8 @@ public static void main( String[] args )
 
 
 static void QueryBlobData(BlobClient blobClient) {
-    //String expression = "SELECT sys.split(split_size)FROM BlobStorage"; 
-	String expression ="SELECT max(cast(accommodates as int) FROM BlobStorage where zipcode='1017'";
+
+	String expression ="SELECT count(*) FROM BlobStorage where zipcode='1017'";
     DumpQueryCsv(blobClient, expression, true);
 }
 
@@ -88,7 +88,7 @@ static void DumpQueryCsv(BlobClient blobClient, String query, Boolean headers) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
             /* Read from stream like you normally would. */
                 for (CSVRecord record : CSVParser.parse(reader, CSVFormat.EXCEL)) {
-               	System.out.println("The values are "+record.get(0));
+              System.out.println(record.toString());
             }
         }
     } catch (Exception e) {
